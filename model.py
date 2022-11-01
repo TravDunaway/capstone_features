@@ -14,11 +14,11 @@ class User(db.Model):
     username = db.Column(db.String(255), unique = True, nullable = False)
     password = db.Column(db.String(255), nullable = False)
 
-    # signups = db.relationship("Signup", backref = "user", lazy = True)
+    signups = db.relationship("Signup", backref = "user", lazy = True)
 
-    # def __init__(self, username, password):
-    #     self.username = username
-    #     self.password = password
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
     # def get_all_logins(self):
     #     logins = []
@@ -34,15 +34,16 @@ class Signup(db.Model):
     __tablename__ = "signups"
 
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    user_signup_email = db.Column(db.String(255), unique = True, nullable = False)
-    user_signip_password= db.Column(db.String(255), unique = False, nullable = False)
+    user_name_signup = db.Column(db.String(255), unique = True, nullable = False)
+    user_name_signup_email= db.Column(db.String(255), unique = False, nullable = False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
     remember_me = db.Column(db.Boolean, default = False)
-    # logins = db.relationship("login", backref = "signup", lazy = True)
 
-    # def __init__(self, user_signup_email, user_id):
-    #     self.user_signup_email = user_signup_email
-    #     self.user_signip_password= user_id
+    logins = db.relationship("login", backref = "signup", lazy = True)
+
+    def __init__(self, user_name_signup, user_id):
+        self.user_name_signup = user_name_signup
+        self.user_name_signup_email= user_id
 
 class Login(db.Model):
 
