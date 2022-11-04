@@ -11,7 +11,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    username = db.Column(db.String(255), unique = False, nullable = False)
+    username = db.Column(db.String(255), unique = True, nullable = False)
     password = db.Column(db.String(255), nullable = False)
     user_email = db.Column(db.String(255), unique = True, nullable = False)
 
@@ -22,6 +22,7 @@ class User(db.Model):
         self.password = password
         self.user_email = user_email
 
+    
     def get_all_choices(self):
         # choices = []
         pass
@@ -75,12 +76,13 @@ def connect_to_db(app):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+    print("connected to db...")
 
 if __name__ == "__main__":
     from flask import Flask
     app = Flask(__name__)
     connect_to_db(app)
-    print("Connected to db...")
+    
 
 
 

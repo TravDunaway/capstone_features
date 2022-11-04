@@ -14,12 +14,28 @@
 <!-- 
 
 
+            {{ userlogin.csrf_token() }}
+            {{ userlogin.username.label }}
+            {{ userlogin.username }}
+            {{ userlogin.password.label }}
+            {{ userlogin.password }}
+            {{ userlogin.submit }}
 
 
 
 
 
-
+    <div class="forms", id ="login_form">
+        <form action="{{ url_for('add_newuser') }}" method="POST">
+            {{ userlogin.csrf_token() }}
+            {{ userlogin.username.label }}
+            {{ userlogin.username }}
+            {{ userlogin.password.label }}
+            {{ userlogin.password }}
+            {{ userlogin.submit }}
+        </form>
+    </div>
+  
 
 
 

@@ -1,11 +1,13 @@
+
 from flask import Flask, render_template, redirect, url_for
 from forms import NewUser, OldUser
-from model import db, User, Time, Choice, connect_to_db
+from model import db, User, connect_to_db
+
 
 
 app = Flask(__name__)
-
 app.secret_key = "Keep this secret"
+
 
 
 user_id = 1
@@ -13,13 +15,18 @@ user_id = 1
 @app.route("/")
 def home():
     newuser_form = NewUser()
-    return render_template("home.html", newuser_form = newuser_form)
+    userlogin = OldUser()
+    return render_template("home.html", newuser_form = newuser_form, userlogin = userlogin)
 
-@app.route("/add-newuser", methods=["POST"])
+@app.route("/where")
+def where():
+    return render_template("where.html")
+
+@app.route("/add-newuser", methods=["GET","POST"])
 def add_newuser():
     newuser_form = NewUser()
 
-    if newuser_form.validate_on_submit():
+    if newuser_form.validate_on_submit() and newuser_form.check_email() and newuser_form.check_username():
         username = newuser_form.username.data
         password = newuser_form.password.data
         user_email = newuser_form.password.data
@@ -29,12 +36,20 @@ def add_newuser():
         print(newuser_form.username.data)
         print(newuser_form.password.data)
         print(newuser_form.user_email.data)
-
-        print("Hey Travis, this is your server, ya DUMMMMMM")
         return redirect(url_for("home"))
     else:
         print("Your newuser_form didn't submit properly.")
         return redirect(url_for("home"))
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    userlogin = OldUser()
+
+    if userlogin.validate_on_submit() and userlogin.check_user_info():
+        print("Youve been directed to the where page.")
+        return redirect(url_for("where"))
+
+
 
 
 if __name__ == "__main__":

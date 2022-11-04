@@ -17,14 +17,19 @@
             {{ newuser_form.password }}
             {{ newuser_form.user_email.label }}
             {{ newuser_form.user_email }}
-            <!-- {{ newuser_form.submit.label }} -->
             {{ newuser_form.submit }}
         </form>
     </div>
     <div class="forms", id ="login_form">
-
+        <form action="{{ url_for('login') }}" method="POST">
+            {{ userlogin.csrf_token() }}
+            {{ userlogin.username.label }}
+            {{ userlogin.username }}
+            {{ userlogin.password.label }}
+            {{ userlogin.password }}
+            {{ userlogin.submit }}
+        </form>
     </div>
-        
 </body>
 
 </html>
