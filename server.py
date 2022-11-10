@@ -1,8 +1,11 @@
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash, abort, request
 from forms import NewUser, OldUser
 from model import db, User, connect_to_db
-
+#
+from flask_login import login_user, login_required, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash 
+#^^
 
 
 app = Flask(__name__)
@@ -15,14 +18,25 @@ user_id = 1
 @app.route("/")
 def home():
     newuser_form = NewUser()
-    userlogin = OldUser()
-    return render_template("home.html", newuser_form = newuser_form, userlogin = userlogin)
+    form = OldUser()
+    return render_template("home.html", newuser_form = newuser_form, form = form)
 
 @app.route("/where")
+@login_required
 def where():
     return render_template("where.html")
 
-@app.route("/add-newuser", methods=["GET","POST"])
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You logged out!")
+    return redirect(url_for('home'))
+
+
+
+
+@app.route("/register", methods=["GET","POST"])
 def add_newuser():
     newuser_form = NewUser()
 
@@ -33,24 +47,38 @@ def add_newuser():
         newuser_info = User(username, password, user_email)
         db.session.add(newuser_info)
         db.session.commit()
+        flash("Thanks for Registering")
         print(newuser_form.username.data)
         print(newuser_form.password.data)
         print(newuser_form.user_email.data)
-        return redirect(url_for("home"))
+        return redirect(url_for("where"))
     else:
+        flash("Oops, lets try that again.")
         print("Your newuser_form didn't submit properly.")
         return redirect(url_for("home"))
+    
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    userlogin = OldUser()
+    form = OldUser()
 
-    if userlogin.validate_on_submit() and userlogin.check_user_info():
-        print("Youve been directed to the where page.")
-        return redirect(url_for("where"))
+    if form.validate_on_submit():
+        user = User.query.filter_by(user_email=form.user_email.data).first()
 
+        if user.check_password(form.password.data) and user is not None:
 
+            login_user(user)
+            flash('Logged in Successfully!')
 
+            next = request.args.get('next')
+
+            if next == None or not next[0] =='/':
+                next = url_for('where')
+            
+    return render_template('home.html', form=form)
+        
+            
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -68,7 +96,56 @@ if __name__ == "__main__":
 
 
 
+# app = Flask(__name__)
+# app.secret_key = "Keep this secret"
 
+
+
+# user_id = 1
+
+# @app.route("/")
+# def home():
+#     newuser_form = NewUser()
+#     form = OldUser()
+#     return render_template("home.html", newuser_form = newuser_form, form = form)
+
+# @app.route("/where")
+# def where():
+#     return render_template("where.html")
+
+# @app.route("/add-newuser", methods=["GET","POST"])
+# def add_newuser():
+#     newuser_form = NewUser()
+
+#     if newuser_form.validate_on_submit() and newuser_form.check_email() and newuser_form.check_username():
+#         username = newuser_form.username.data
+#         password = newuser_form.password.data
+#         user_email = newuser_form.password.data
+#         newuser_info = User(username, password, user_email)
+#         db.session.add(newuser_info)
+#         db.session.commit()
+#         print(newuser_form.username.data)
+#         print(newuser_form.password.data)
+#         print(newuser_form.user_email.data)
+#         return redirect(url_for("home"))
+#     else:
+#         print("Your newuser_form didn't submit properly.")
+#         return redirect(url_for("home"))
+
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     form = OldUser()
+
+#     if form.validate_on_submit() and form.check_user_info():
+#         print("Youve been directed to the where page.")
+#         return redirect(url_for("where"))
+
+
+
+
+# if __name__ == "__main__":
+#     connect_to_db(app)
+#     app.run(debug = True)
 
 
 

@@ -1,35 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fastest Route Home-Page</title>
-</head>
-<body>
-    <div class="forms", id="signup_form">
+{% extends "base.html %}
+{% block content %}
+<div class="forms", id="signup_form">
 
-        <form action="{{ url_for('add_newuser') }}" method="POST">
-            {{ newuser_form.csrf_token() }}
-            {{ newuser_form.username.label }}
-            {{ newuser_form.username }}
-            {{ newuser_form.password.label }}
-            {{ newuser_form.password }}
-            {{ newuser_form.user_email.label }}
-            {{ newuser_form.user_email }}
-            {{ newuser_form.submit }}
-        </form>
-    </div>
-    <div class="forms", id ="login_form">
-        <form action="{{ url_for('login') }}" method="POST">
-            {{ userlogin.csrf_token() }}
-            {{ userlogin.username.label }}
-            {{ userlogin.username }}
-            {{ userlogin.password.label }}
-            {{ userlogin.password }}
-            {{ userlogin.submit }}
-        </form>
-    </div>
-</body>
+    <form action="{{ url_for('add_newuser') }}" method="POST">
+        {{ newuser_form.csrf_token() }}
+        {{ newuser_form.username.label }}
+        {{ newuser_form.username }}<br>
+        {{ newuser_form.password.label }}
+        {{ newuser_form.password }}<br>
+        {{ newuser_form.user_email.label }}
+        {{ newuser_form.user_email }}<br>
+        {{ newuser_form.submit }}
+    </form>
+</div>
+<div class="forms", id ="login_form">
+    <form action="{{ url_for('login') }}" method="POST">
+        {{ form.csrf_token() }}
+        {{ form.username.label }}
+        {{ form.username }}
+        {{ form.password.label }}
+        {{ form.password }}
+        {{ form.submit }}
+    </form>
+</div>
+{% endblock%}
 
-</html>
+
+
+
+
+
+
+
+

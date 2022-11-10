@@ -7,24 +7,27 @@
     <title>Login</title>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Ubermelon</a>
-            <div class="collapse navbar-collapse">
-                <div class="navbar-nav">
-                </div>
-            </div>
-        </div>
-    </nav>
 
-  <div class="container">
+<div>
+    <ul class="nav">
+        <li class="nav-link"><a href="{{ url_for('home')}}"></a></li> 
+        {% if current_user.is_authenticated %}
+        <li class="nav-link"><a href="{{ url_for('logout')}}"></a> </li>
+        {% else %}
+        <li class="nav-link"><a href="{{ url_for('home')}}"></a></li>  
+        {% endif %}
+    </ul>
+</div>
 
-    <!-- This is where the main content goes. -->
-    {% block body %}
-        BODY OF PAGE GOES HERE VIA INHERITANCE
-    {% endblock %}
 
-  </div>
+<div class="block-content">
+
+       {% block body %}
+       BODY OF PAGE GOES HERE VIA INHERITANCE
+       {% endblock %}
+       
+</div>
+
 
 </body>
 </html>
